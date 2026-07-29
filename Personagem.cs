@@ -2,19 +2,21 @@ namespace game
 {
     public class Personagem
     {
-        public int Vida { get; set; }
+        
+        public int Vida { get; private set; }
         public string Nome { get; set; }
         public string Raça { get; set; }
         public string Skins { get; set; }
         public string Classe { get; set; }
-        public int Forca { get; set; }
-        
-        public Personagem(string nome, string raça, string skins, string classe, int forca)
+        public int Forca { get; private set; }
+
+        public Personagem(string nome, string raca, string skins, string classe,
+                         int forca) 
         {
             Nome = nome;
-            Raça = raça;
-            Skins = skins;
             Classe = classe;
+            Raça = raca;
+            Skins = skins;
             Vida = 100;
             Forca = forca;
         }
@@ -28,7 +30,7 @@ namespace game
         {
             Vida -= dano;
             Console.WriteLine($"{Nome} tomou {dano} de dano. Vida atual: {Vida}");
-            if (Vida <= 0)
+            if (EstaMorto())
             {
                 Console.WriteLine($"{Nome} foi derrotado!");
                 Vida = 0;
@@ -42,13 +44,26 @@ namespace game
             Console.WriteLine($"{Nome} subiu de nível! Vida atual: {Vida}");
             Console.WriteLine($"{Nome} subiu de nível! Força atual: {Forca}");
         }
+        public bool EstaVivo()
+        {
+            return Vida > 0;
+        }
+        public bool EstaMorto()
+        {
+            return Vida <= 0;
+        }
 
         public void Atacar(Personagem alvo)
         {
+            if (EstaMorto())
+            {
+                return;
+            }
+
             Console.WriteLine($"{Nome} está atacando {alvo.Nome} com força {Forca}.");
             alvo.TomarDano(Forca);
 
-            if (alvo.Vida == 0)
+            if (alvo.EstaMorto())
             {
                 SubirNivel();
             }
